@@ -18,253 +18,138 @@ print(groups)
 
 
 
-def UpdateGroups(moveY, moveX):
-
-    capturedgroup = ""
-    move = board[moveY-1][moveX-1]
-    groups[moveY-1][moveX-1] = chr(moveY+96) + chr(moveX+96)
-    liberties[groups[moveY-1][moveX-1]] = 4
-    libertyCount = liberties[groups[moveY-1][moveX-1]]
-    moveGroup = groups[moveY-1][moveX-1]
-    print("move", move)
-    print("movegroup", moveGroup)
-
-    if moveY == 1:
-        libertyCount -= 1
-    if moveY > 1:
-        target = board[moveY-2][moveX-1]
-        targetGroup = groups[moveY-2][moveX-1]
-        print("up target", target)
-        print("up targetGroup", targetGroup)
-        if target == 0:
-            pass
-        elif target != move:
-            libertyCount -= 1
-            liberties[targetGroup] -= 1
-            if liberties[targetGroup] == 0:
-                for i in range(Board_Size + 1):
-                    for j in range(Board_Size + 1):
-                        if groups[j][i] == targetGroup:
-                            capturedgroup = targetGroup
-                            board[j][i] = 0
-                            Capture(capturedgroup)
-
-                liberties.pop(targetGroup)
-
-        elif target == move:
-            for i in range(Board_Size + 1):
-                for j in range(Board_Size + 1):
-                    if groups[j][i] == targetGroup:
-                        groups[j][i] = moveGroup
-            targetLiberties = liberties.get(targetGroup)
-            liberties.pop(targetGroup)
-            libertyCount += targetLiberties
-            libertyCount -= 2
-            liberties[moveGroup] = libertyCount
-
-    if moveY == 19:
-        libertyCount -= 1
-    if moveY < 19:
-        target = board[moveY][moveX-1]
-        targetGroup = groups[moveY][moveX-1]
-        print("down target", target)
-        print("down targetGroup", targetGroup)
-        if target == 0:
-            pass
-        elif target != move:
-            libertyCount -= 1
-            liberties[targetGroup] -= 1
-            if liberties[targetGroup] == 0:
-                for i in range(Board_Size + 1):
-                    for j in range(Board_Size + 1):
-                        if groups[j][i] == targetGroup:
-                            capturedgroup = targetGroup
-                            board[j][i] = 0
-                            Capture(capturedgroup)
+def UpdateGroups():
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
+            if board[y][x] != 0:
+                groups[y][x] = chr(y + 97) + chr(x + 97)
 
 
-                liberties.pop(targetGroup)
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
 
-        elif target == move:
-            for i in range(Board_Size + 1):
-                for j in range(Board_Size + 1):
-                    if groups[j][i] == targetGroup:
-                        groups[j][i] = moveGroup
-            targetLiberties = liberties.get(targetGroup)
-            liberties.pop(targetGroup)
-            libertyCount += targetLiberties
-            libertyCount -= 2
-            liberties[moveGroup] = libertyCount
+            if y < 18:
+                #if groups[y][x] != groups[y + 1][x]:
+                    #print("target down  -  (", y, x, ")  - ", groups[y][x], " - ", groups[y + 1][x])
 
-    if moveX == 1:
-        libertyCount -= 1
-    if moveX > 1:
-        target = board[moveY-1][moveX-2]
-        targetGroup = groups[moveY-1][moveX-2]
-        print("left target", target)
-        print("left targetGroup", targetGroup)
-        if target == 0:
-            pass
-        elif target != move:
-            libertyCount -= 1
-            liberties[targetGroup] -= 1
-            if liberties[targetGroup] == 0:
-                for i in range(Board_Size + 1):
-                    for j in range(Board_Size + 1):
-                        if groups[j][i] == targetGroup:
-                            capturedgroup = targetGroup
-                            board[j][i] = 0
-                            Capture(capturedgroup)
+                if board[y][x] == board[y + 1][x]:
+                    groups[y + 1][x] = groups[y][x]
+            if x < 18:
+                #if groups[y][x] != groups[y][x + 1]:
+                    #print("target right -  (", y, x, ")  - ", groups[y][x], " - ", groups[y][x + 1])
+                if board[y][x] == board[y][x + 1]:
+                    groups[y][x + 1] = groups[y][x]
+            if y > 0:
+                #if groups[y][x] != groups[y - 1][x]:
+                    #print("target up    -  (", y, x, ")  - ", groups[y][x], " - ", groups[y - 1][x])
+                if board[y][x] == board[y - 1][x]:
+                    groups[y - 1][x] = groups[y][x]
+            if x > 0:
+                #if groups[y][x] != groups[y][x - 1]:
+                    #print("target left  -  (", y, x, ")  - ", groups[y][x], " - ", groups[y][x - 1])
+                if board[y][x] == board[y][x - 1]:
+                    groups[y][x - 1] = groups[y][x]
 
-                liberties.pop(targetGroup)
-
-        elif target == move:
-            for i in range(Board_Size + 1):
-                for j in range(Board_Size + 1):
-                    if groups[j][i] == targetGroup:
-                        groups[j][i] = moveGroup
-            targetLiberties = liberties.get(targetGroup)
-            liberties.pop(targetGroup)
-            libertyCount += targetLiberties
-            libertyCount -= 2
-            liberties[moveGroup] = libertyCount
-
-    if moveX == 19:
-        libertyCount -= 1
-
-    if moveX < 19:
-        target = board[moveY-1][moveX]
-        targetGroup = groups[moveY-1][moveX]
-        print("right target", target)
-        print("right targetGroup", targetGroup)
-        if target == 0:
-            pass
-        elif target != move:
-            libertyCount -= 1
-            liberties[targetGroup] -= 1
-            if liberties[targetGroup] == 0:
-                for i in range(Board_Size + 1):
-                    for j in range(Board_Size + 1):
-                        if groups[j][i] == targetGroup:
-                            capturedgroup = targetGroup
-                            board[j][i] = 0
-                            Capture(capturedgroup)
-                liberties.pop(targetGroup)
-
-
-        elif target == move:
-            for i in range(Board_Size + 1):
-                for j in range(Board_Size + 1):
-                    if groups[j][i] == targetGroup:
-                        groups[j][i] = moveGroup
-            targetLiberties = liberties.get(targetGroup)
-            liberties.pop(targetGroup)
-            libertyCount += targetLiberties
-            libertyCount -= 2
-            liberties[moveGroup] = libertyCount
-
-    if moveX > 1 and board[moveY-1][moveX-2] == 0:
-        if moveX > 2:
-            target1 = groups[moveY-1][moveX-3]
-            if target1 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveY > 1:
-            target2 = groups[moveY-2][moveX-2]
-            if target2 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveY < 19:
-            target3 = groups[moveY][moveX-2]
-            if target3 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-
-    if moveY > 1 and board[moveY - 2][moveX - 1] == 0:
-        if moveY > 2:
-            target1 = groups[moveY-3][moveX-1]
-            if target1 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveX > 1:
-            target2 = groups[moveY-2][moveX-2]
-            if target2 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveX < 19:
-            target3 = groups[moveY-2][moveX]
-            if target3 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-
-    if moveX < 19 and board[moveY - 1][moveX] == 0:
-        if moveY > 1:
-            target1 = groups[moveY - 2][moveX]
-            if target1 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveY < 19:
-            target2 = groups[moveY][moveX]
-            if target2 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveX < 18:
-            target3 = groups[moveY-1][moveX+1]
-            if target3 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-
-    if moveY < 19 and board[moveY][moveX-1] == 0:
-        if moveY < 18:
-            target1 = groups[moveY+1][moveX-1]
-            if target1 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveX > 1:
-            target2 = groups[moveY][moveX-2]
-            if target2 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-        if moveX < 19:
-            target3 = groups[moveY][moveX]
-            if target3 == groups[moveY-1][moveX-1]:
-                libertyCount -= 1
-
-    for i in groups:
-        for j in i:
-            print(j, end=" ")
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
+            print(groups[y][x], end=" ")
         print()
 
-    liberties[groups[moveY - 1][moveX - 1]] = libertyCount
-    #UpdateLiberties()
 
-
-    #print(liberties[groups[moveY-1][moveX-1]])
-    #print(liberties)
 
 def Capture (capturedGroup):
     for y in range(Board_Size + 1):
         for x in range(Board_Size + 1):
             if groups[y][x] == capturedGroup:
                 groups[y][x] = "0"
+                board[y][x] = 0
 
-def UpdateLiberties():
-
-
-    for group in liberties:
-        liberties[group] = 0
-
-
+def UpdateLiberties(groups):
+    liberties.clear()
     for y in range(Board_Size + 1):
         for x in range(Board_Size + 1):
-            moveGroupsSet = set()
-            if y > 0 and board[y][x] == 0:
-                if groups[y-1][x] != "0":
-                    moveGroupsSet.add(groups[y-1][x])
-            if y < 18 and board[y][X] == 0:
-                if groups[y+1][x] != "0":
-                    moveGroupsSet.add(groups[y+1][x])
-            if x > 0 and board[y][x] == 0:
-                if groups[y][x-1] != "0":
-                    moveGroupsSet.add(groups[y][x-1])
-            if x < 18 and board[y][x] == 0:
-                if groups[y][x+1] != "0":
-                    moveGroupsSet.add(groups[y][x+1])
-            for group in moveGroupsSet:
-                liberties[group] += 1
-
-            if len(moveGroupsSet) > 0:
-                print("liberties", moveGroupsSet, y+1, x+1)
+            neighbours = set()
+            if y < 18:
+                if groups[y][x] == "0" and groups[y + 1][x] != "0":
+                    neighbours.add(groups[y + 1][x])
+                    #print("felső")
+            if x < 18:
+                if groups[y][x] == "0" and groups[y][x + 1] != "0":
+                    neighbours.add(groups[y][x + 1])
+                    #print("bal")
+            if y > 0:
+                if groups[y][x] == "0" and groups[y - 1][x] != "0":
+                    neighbours.add(groups[y - 1][x])
+                    #print("alsó")
+            if x > 0:
+                if groups[y][x] == "0" and groups[y][x - 1] != "0":
+                    neighbours.add(groups[y][x - 1])
+                    #print("jobb")
+            for group in neighbours:
+                AddLiberty(group)
     print(liberties)
+def AddLiberty(group):
+    try:
+        liberties[group] += 1
+    except:
+        liberties[group] = 1
+
+def TakeStones(turn):
+    if turn == "black":
+        turnturn = 2
+    if turn == "white":
+        turnturn = 1
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
+            isDead = True
+            for group in liberties:
+                if groups[y][x] == group:
+                    isDead = False
+            if isDead and board[y][x] == abs(turnturn - 3):
+                board[y][x] = 0
+                groups[y][x] = "0"
+    s.update()
+
+def CheckSuicide():
+    if Turn == "black":
+        turnturn = 2
+    if Turn == "white":
+        turnturn = 1
+
+    if Y > 1:
+        #bal
+        if board[Y - 2][X - 1] == 0:
+            return False
+        if board[Y - 2][X - 1] == turnturn:
+            if liberties[groups[Y - 2][X - 1]] > 1:
+                print("cica", liberties[groups[Y - 2][X - 1]], groups[Y - 2][X - 1])
+                return False
+    if X > 1:
+        #fel
+        if board[Y - 1][X - 2] == 0:
+            return False
+        if board[Y - 1][X - 2] == turnturn:
+            if liberties[groups[Y - 1][X - 2]] > 1:
+                print("mica", liberties[groups[Y - 1][X - 2]], groups[Y - 1][X - 2])
+                return False
+    if Y < 19:
+        #bal
+        if board[Y][X - 1] == 0:
+            return False
+        if board[Y][X - 1] == turnturn:
+            if liberties[groups[Y][X - 1]] > 1:
+                print("cucu", liberties[groups[Y][X - 1]], groups[Y][X - 1])
+                return False
+    if X < 19:
+        #bal
+        if board[Y - 1][X] == 0:
+            return False
+        if board[Y - 1][X] == turnturn:
+            if liberties[groups[Y - 1][X]] > 1:
+                print("mucu", liberties[groups[Y - 1][X]], groups[Y - 1][X])
+                return False
+    return True
+
 def create_star(X, Y):
     s.create_oval((Board_X1 + Board_GapX * (X - 1)) - Chess_Radius / 5,
                   (Board_Y1 + Board_GapY * (Y - 1)) - Chess_Radius / 5,
@@ -306,9 +191,9 @@ def Location(coordX, coordY):
     return X, Y
 
 def Location_Validation():
+
     if X == None or Y == None:
         return False
-
     elif board[Y - 1][X - 1] == 0:
         return True
 
@@ -397,52 +282,50 @@ while Winner == None:
 
     Picked = Location_Validation()
 
+
     if Picked:
+        isSuicide = CheckSuicide()
+        if isSuicide == False:
 
-        if Turn_Num % 2 == 1:
-            White_Cord_PickedX.append(X)
-            White_Cord_PickedY.append(Y)
-            board[Y - 1][X - 1] = 2
-            print()
-            print(Turn, "picked", Y, X)
-            UpdateGroups(Y, X)
+            if Turn_Num % 2 == 1:
+                White_Cord_PickedX.append(X)
+                White_Cord_PickedY.append(Y)
+                board[Y - 1][X - 1] = 2
+                print()
+                print(Turn, "picked", Y, X)
+                UpdateGroups()
+                UpdateLiberties(groups)
+                TakeStones(Turn)
 
-            UpdateLiberties()
-            Turn = "white"
+                Turn = "white"
 
-        elif Turn_Num % 2 == 0:
-            Black_Cord_PickedX.append(X)
-            Black_Cord_PickedY.append(Y)
-            board[Y - 1][X - 1] = 1
-            print()
-            print(Turn, "picked", Y, X)
-            UpdateGroups(Y, X)
-            UpdateLiberties()
+            elif Turn_Num % 2 == 0:
+                Black_Cord_PickedX.append(X)
+                Black_Cord_PickedY.append(Y)
+                board[Y - 1][X - 1] = 1
+                print()
+                print(Turn, "picked", Y, X)
+                UpdateGroups()
+                UpdateLiberties(groups)
+                TakeStones(Turn)
 
-            Turn = "black"
+                Turn = "black"
 
-        #s.delete(Turn_Text)
-        s.delete("cica")
-        for i in range(len(board)):
-            for j in range(len(board)):
-                if board[i][j] == 1:
-                    create_stone(Board_X1 + Board_GapX * (j), Board_Y1 + Board_GapY * (i), radius=Chess_Radius,
-                                 fill="white")
-                if board[i][j] == 2:
-                    create_stone(Board_X1 + Board_GapX * (j), Board_Y1 + Board_GapY * (i), radius=Chess_Radius,
-                                 fill="black")
-        #create_stone(Board_X1 + Board_GapX * (X - 1), Board_Y1 + Board_GapY * (Y - 1), radius=Chess_Radius, fill=Turn)
+            s.delete("cica")
+            for i in range(len(board)):
+                for j in range(len(board)):
+                    if board[i][j] == 1:
+                        create_stone(Board_X1 + Board_GapX * (j), Board_Y1 + Board_GapY * (i), radius=Chess_Radius,
+                                     fill="white")
+                    if board[i][j] == 2:
+                        create_stone(Board_X1 + Board_GapX * (j), Board_Y1 + Board_GapY * (i), radius=Chess_Radius,
+                                     fill="black")
+            Turn_Num = Turn_Num + 1
 
-        Turn_Num = Turn_Num + 1
-
-        if Turn == "white":
-            Colour_Check = Black_Piece
-
-
-        elif Turn == "black":
-            Colour_Check = White_Piece
+            if Turn == "white":
+                Colour_Check = Black_Piece
 
 
-        #Winner = winCheck(Colour_Check, Win_Check, board)
+            elif Turn == "black":
+                Colour_Check = White_Piece
 
-#s.delete(Turn_Text)
