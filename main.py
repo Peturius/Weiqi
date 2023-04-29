@@ -16,7 +16,11 @@ for i in range(Board_Size):
     groups.append(["0"] * (Board_Size))
 print(groups)
 
-
+def connect(oopsie):
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
+            if groups[y][x] == oopsie[0]:
+                groups[y][x] = oopsie[1]
 
 def UpdateGroups():
     for y in range(Board_Size + 1):
@@ -27,32 +31,38 @@ def UpdateGroups():
 
     for y in range(Board_Size + 1):
         for x in range(Board_Size + 1):
-
+            oopsie = []
             if y < 18:
-                #if groups[y][x] != groups[y + 1][x]:
-                    #print("target down  -  (", y, x, ")  - ", groups[y][x], " - ", groups[y + 1][x])
-
                 if board[y][x] == board[y + 1][x]:
-                    groups[y + 1][x] = groups[y][x]
+                    groups[y][x] = groups[y + 1][x]
+                    #print("jobb")
             if x < 18:
-                #if groups[y][x] != groups[y][x + 1]:
-                    #print("target right -  (", y, x, ")  - ", groups[y][x], " - ", groups[y][x + 1])
                 if board[y][x] == board[y][x + 1]:
-                    groups[y][x + 1] = groups[y][x]
+                    groups[y][x] = groups[y][x + 1]
+                    #print("le")
             if y > 0:
-                #if groups[y][x] != groups[y - 1][x]:
-                    #print("target up    -  (", y, x, ")  - ", groups[y][x], " - ", groups[y - 1][x])
                 if board[y][x] == board[y - 1][x]:
-                    groups[y - 1][x] = groups[y][x]
+                    groups[y][x] = groups[y - 1][x]
+                    oopsie.append(groups[y - 1][x])
             if x > 0:
-                #if groups[y][x] != groups[y][x - 1]:
-                    #print("target left  -  (", y, x, ")  - ", groups[y][x], " - ", groups[y][x - 1])
                 if board[y][x] == board[y][x - 1]:
-                    groups[y][x - 1] = groups[y][x]
+                    groups[y][x] = groups[y][x - 1]
+                    oopsie.append(groups[y][x - 1])
+            if len(oopsie) == 2:
+                connect(oopsie)
+
 
     for y in range(Board_Size + 1):
         for x in range(Board_Size + 1):
-            print(groups[y][x], end=" ")
+            if groups[y][x] == "0":
+                print(groups[y][x], end="  ")
+            else:
+                print(groups[y][x], end=" ")
+        print()
+    print("-------------------------------------------------------")
+    for y in range(Board_Size + 1):
+        for x in range(Board_Size + 1):
+            print(board[y][x], end="  ")
         print()
 
 
@@ -88,6 +98,7 @@ def UpdateLiberties(groups):
             for group in neighbours:
                 AddLiberty(group)
     print(liberties)
+
 def AddLiberty(group):
     try:
         liberties[group] += 1
