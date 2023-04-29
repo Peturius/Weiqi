@@ -135,6 +135,10 @@ def CheckSuicide():
             if liberties[groups[Y - 2][X - 1]] > 1:
                 print("cica", liberties[groups[Y - 2][X - 1]], groups[Y - 2][X - 1])
                 return False
+        if board[Y - 2][X - 1] == abs(turnturn - 3):
+            if liberties[groups[Y - 2][X - 1]] ==  1:
+                return False
+
     if X > 1:
         #fel
         if board[Y - 1][X - 2] == 0:
@@ -142,6 +146,9 @@ def CheckSuicide():
         if board[Y - 1][X - 2] == turnturn:
             if liberties[groups[Y - 1][X - 2]] > 1:
                 print("mica", liberties[groups[Y - 1][X - 2]], groups[Y - 1][X - 2])
+                return False
+        if board[Y - 1][X - 2] == abs(turnturn - 3):
+            if liberties[groups[Y - 1][X - 2]] ==  1:
                 return False
     if Y < 19:
         #bal
@@ -151,6 +158,9 @@ def CheckSuicide():
             if liberties[groups[Y][X - 1]] > 1:
                 print("cucu", liberties[groups[Y][X - 1]], groups[Y][X - 1])
                 return False
+        if board[Y][X - 1] == abs(turnturn - 3):
+            if liberties[groups[Y][X - 1]] ==  1:
+                return False
     if X < 19:
         #bal
         if board[Y - 1][X] == 0:
@@ -158,6 +168,9 @@ def CheckSuicide():
         if board[Y - 1][X] == turnturn:
             if liberties[groups[Y - 1][X]] > 1:
                 print("mucu", liberties[groups[Y - 1][X]], groups[Y - 1][X])
+                return False
+        if board[Y - 1][X] == abs(turnturn - 3):
+            if liberties[groups[Y - 1][X]] ==  1:
                 return False
     return True
 
