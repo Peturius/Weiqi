@@ -2,7 +2,7 @@ from tkinter import *
 from time import *
 import sys
 root = Tk()
-s = Canvas(root, width=800, height=800, background="#b69b4c")
+s = Canvas(root, width=800, height=800, background="#f2b06d")
 s.pack()
 
 Board_Size = 19
@@ -260,6 +260,7 @@ for i in range(Board_Size + 1):
 Unfilled = 0
 Black_Piece = 1
 White_Piece = 2
+
 
 # Fills Empty List
 for z in range(1, Board_Size + 2):
